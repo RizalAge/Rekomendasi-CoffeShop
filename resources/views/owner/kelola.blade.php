@@ -14,11 +14,28 @@
 
                     <form action="{{ route('owner.kelola.update') }}" method="POST">
                         @csrf
-                        
+                        <input type="hidden" name="cafe_id" value="{{ $cafe->id }}">
+
                         <h5 class="mb-3">Informasi Umum</h5>
                         <div class="mb-3">
                             <label class="form-label">Alamat Lengkap</label>
                             <textarea class="form-control" name="address" rows="2">{{ $cafe->address }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">No. Telepon / WA</label>
+                            <input type="text" class="form-control" name="phone" value="{{ $cafe->phone }}" placeholder="Contoh: 08123456789">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Jam Buka</label>
+                                <input type="time" class="form-control" name="open_time" value="{{ $cafe->open_time ?? '08:00' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Jam Tutup</label>
+                                <input type="time" class="form-control" name="close_time" value="{{ $cafe->close_time ?? '22:00' }}">
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -26,19 +43,20 @@
                                 <label class="form-label">Harga Termurah (Min Price)</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" class="form-control format-rupiah" id="min_price" name="min_price" 
-                                           value="{{ (!empty($cafe->min_price) && $cafe->min_price > 0) ? number_format($cafe->min_price, 0, '', '.') : '' }}" 
-                                           placeholder="0" required>
+                                    <input type="text" class="form-control format-rupiah" id="min_price_display" 
+                                           value="{{ (!empty($cafe->min_price) && $cafe->min_price > 0) ? number_format($cafe->min_price, 0, ',', '.') : '' }}" 
+                                           placeholder="0">
+                                    <input type="hidden" name="min_price" id="min_price" value="{{ $cafe->min_price ?? 0 }}">
                                 </div>
                             </div>
-                            
                             <div class="col-md-6 mt-3 mt-md-0">
                                 <label class="form-label">Harga Termahal (Max Price)</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" class="form-control format-rupiah" id="max_price" name="max_price" 
-                                           value="{{ (!empty($cafe->max_price) && $cafe->max_price > 0) ? number_format($cafe->max_price, 0, '', '.') : '' }}" 
-                                           placeholder="0" required>
+                                    <input type="text" class="form-control format-rupiah" id="max_price_display" 
+                                           value="{{ (!empty($cafe->max_price) && $cafe->max_price > 0) ? number_format($cafe->max_price, 0, ',', '.') : '' }}" 
+                                           placeholder="0">
+                                    <input type="hidden" name="max_price" id="max_price" value="{{ $cafe->max_price ?? 0 }}">
                                 </div>
                             </div>
                         </div>
@@ -96,36 +114,26 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const rupiahInputs = document.querySelectorAll('.format-rupiah');
-    const form = document.querySelector('form');
+    const fields = [
+        { display: document.getElementById('min_price_display'), hidden: document.getElementById('min_price') },
+        { display: document.getElementById('max_price_display'), hidden: document.getElementById('max_price') },
+    ];
 
-    function formatRupiah(angka) {
-        let number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa  = split[0].length % 3,
-            rupiah  = split[0].substr(0, sisa),
-            ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
-
-        if (ribuan) {
-            let separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-        return rupiah;
+    function toNumber(val) {
+        return parseInt(val.replace(/\./g, '').replace(/,/g, '')) || 0;
     }
 
-    rupiahInputs.forEach(function(input) {
-        input.addEventListener('keyup', function(e) {
-            this.value = formatRupiah(this.value);
+    function formatRupiah(val) {
+        return toNumber(val).toLocaleString('id-ID');
+    }
+
+    fields.forEach(function(field) {
+        field.display.addEventListener('keyup', function() {
+            const raw = toNumber(this.value);
+            field.hidden.value = raw;
+            this.value = raw > 0 ? raw.toLocaleString('id-ID') : '';
         });
     });
-
-    if(form) {
-        form.addEventListener('submit', function() {
-            rupiahInputs.forEach(function(input) {
-                input.value = input.value.replace(/\./g, '');
-            });
-        });
-    }
 });
 </script>
 @endsection

@@ -46,6 +46,12 @@ class CoffeeShop extends Model
         'kategori' => 'array',
         'fasilitas' => 'array',
         'dokumen_persyaratan' => 'array',
+        'wifi'                 => 'boolean',
+        'power_outlet'         => 'boolean', 
+        'smoking_area'         => 'boolean',
+        'outdoor_seating'      => 'boolean',
+        'quiet_atmosphere'     => 'boolean',
+        'suitable_for_work'    => 'boolean',
     ];
 
     public function owner()

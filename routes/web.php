@@ -75,15 +75,15 @@ Route::middleware(['auth'])->group(function () {
     // --- FITUR PEMILIK CAFE (AJUKAN & KELOLA) ---
     // Tetap menggunakan prefix 'owner' agar URL-nya rapi (contoh: /owner/upload-persyaratan)
     Route::prefix('owner')->name('owner.')->group(function () {
-        Route::get('/dashboard', [OwnerController::class, 'dashboard'])->name('dashboard');
-        
-        // Upload & Ajukan Cafe
-        Route::get('/upload-persyaratan', [OwnerController::class, 'showUploadForm'])->name('upload.form');
-        Route::post('/upload-persyaratan', [OwnerController::class, 'processUpload'])->name('upload.process');
-        
-        // Kelola data cafe setelah disetujui
-        Route::get('/kelola-cafe', [OwnerController::class, 'kelolaData'])->name('kelola');
-        Route::post('/kelola-cafe', [OwnerController::class, 'updateData'])->name('kelola.update'); 
+    Route::get('/dashboard', [OwnerController::class, 'dashboard'])->name('dashboard');
+    
+    // Upload & Ajukan Cafe
+    Route::get('/upload-persyaratan', [OwnerController::class, 'showUploadForm'])->name('upload.form');
+    Route::post('/upload-persyaratan', [OwnerController::class, 'processUpload'])->name('upload.process');
+    
+    // Kelola data cafe setelah disetujui (dengan id)
+    Route::get('/kelola/{id}', [OwnerController::class, 'kelolaData'])->name('kelolaData');
+    Route::post('/kelola/update', [OwnerController::class, 'updateData'])->name('kelola.update');
     });
 });
 

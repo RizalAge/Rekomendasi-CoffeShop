@@ -91,13 +91,7 @@
                             @endif
                         </li>
                         
-                        <li class="mb-0"> 
-                            @if($coffeeShop->manual_brew)
-                                <i class="fas fa-check-circle text-success"></i> Manual Brew
-                            @else
-                                <i class="fas fa-times-circle text-danger"></i> Tidak ada manual brew
-                            @endif
-                        </li>
+
                     </ul>
                 </div>
             </div>

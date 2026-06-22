@@ -71,47 +71,57 @@ class OwnerController extends Controller
     }
 
     // Menampilkan halaman kelola data cafe
-    public function kelolaData()
-    {
-        $cafe = CoffeeShop::where('user_id', Auth::id())
-                          ->where('status', 'approved')
-                          ->first();
+    public function kelolaData($id)
+        {
+            $cafe = CoffeeShop::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->where('status', 'approved')
+                            ->firstOrFail();
 
-        if (!$cafe) {
-            return redirect()->route('owner.dashboard')->with('error', 'Anda belum memiliki cafe yang disetujui.');
+            return view('owner.kelola', compact('cafe'));
         }
-
-        return view('owner.kelola', compact('cafe')); 
-    }
 
     // Memproses update data dan fasilitas cafe
     public function updateData(Request $request)
     {
-        $cafe = CoffeeShop::where('user_id', Auth::id())
+        $cafe = CoffeeShop::where('id', $request->cafe_id)
+                          ->where('user_id', Auth::id())
                           ->where('status', 'approved')
-                          ->first();
-
-        if (!$cafe) {
-            return redirect()->route('owner.dashboard')->with('error', 'Cafe tidak ditemukan atau belum disetujui.');
-        }
+                          ->firstOrFail();
 
         $request->validate([
-            'address' => 'nullable|string',
-            'min_price' => 'nullable|numeric',
-            'max_price' => 'nullable|numeric',
+            'address'    => 'nullable|string',
+            'phone'      => 'nullable|string|max:20',
+            'open_time'  => 'nullable',
+            'close_time' => 'nullable',
+            'min_price'  => 'nullable|numeric',
+            'max_price'  => 'nullable|numeric',
         ]);
 
-        $cafe->address = $request->address;
-        $cafe->min_price = $request->min_price;
-        $cafe->max_price = $request->max_price;
+        $cafe->address    = $request->address;
+        $cafe->phone      = $request->phone;
+        $cafe->open_time  = $request->open_time;
+        $cafe->close_time = $request->close_time;
+        $cafe->min_price  = $request->min_price ?? 0;
+        $cafe->max_price  = $request->max_price ?? 0;
 
-        // Menyimpan status checkbox
-        $cafe->wifi = $request->has('wifi');
-        $cafe->power_outlet = $request->has('power_outlet');
-        $cafe->smoking_area = $request->has('smoking_area');
-        $cafe->outdoor_seating = $request->has('outdoor_seating');
-        $cafe->quiet_atmosphere = $request->has('quiet_atmosphere');
-        $cafe->suitable_for_work = $request->has('suitable_for_work');
+        // Hitung price_range otomatis
+        $minPrice = $request->min_price ?? 0;
+        if ($minPrice < 25000) {
+            $cafe->price_range = 'murah';
+        } elseif ($minPrice <= 50000) {
+            $cafe->price_range = 'sedang';
+        } else {
+            $cafe->price_range = 'mahal';
+        }
+
+        // Simpan fasilitas
+        $cafe->wifi              = $request->has('wifi') ? 1 : 0;
+        $cafe->power_outlet      = $request->has('power_outlet') ? 1 : 0;
+        $cafe->smoking_area      = $request->has('smoking_area') ? 1 : 0;
+        $cafe->outdoor_seating   = $request->has('outdoor_seating') ? 1 : 0;
+        $cafe->quiet_atmosphere  = $request->has('quiet_atmosphere') ? 1 : 0;
+        $cafe->suitable_for_work = $request->has('suitable_for_work') ? 1 : 0;
 
         $cafe->save();
 

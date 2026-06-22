@@ -46,7 +46,7 @@
                                     </td>
                                     <td>
                                         @if($cafe->status == 'approved')
-                                            <a href="{{ route('owner.kelola') }}" class="btn btn-sm btn-info">Kelola Menu & Fasilitas</a>
+                                           <a href="{{ route('owner.kelolaData', ['id' => $cafe->id]) }}" class="btn btn-info btn-sm">Kelola Menu & Fasilitas</a>
                                         @else
                                             <button class="btn btn-sm btn-secondary" disabled>Terkunci</button>
                                         @endif
