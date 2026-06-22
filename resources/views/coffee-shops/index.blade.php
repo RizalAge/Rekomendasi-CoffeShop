@@ -40,21 +40,19 @@
     <div class="row">
         @forelse($coffeeShops as $shop)
         <div class="col-md-4 col-lg-3 mb-4">
-            {{-- Tambahkan d-flex flex-column agar card body fleksibel --}}
             <div class="card h-100 shop-card d-flex flex-column">
-                @php
-            
-                 $images = $shop->image ? (is_array(json_decode($shop->image, true)) ? json_decode($shop->image, true) : [$shop->image]) : [];
-                  @endphp
-                @if(count($images) > 0)
-                <img src="{{ asset('storage/' . $images[0]) }}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="{{ $shop->name }}">
+
+                @if($shop->image)
+                    <img src="{{ asset('storage/' . $shop->image) }}" 
+                         class="card-img-top" 
+                         style="height: 180px; object-fit: cover;" 
+                         alt="{{ $shop->name }}">
                 @else
-                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
-                    <i class="fas fa-coffee fa-3x text-white"></i>
-                 </div>
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
+                        <i class="fas fa-coffee fa-3x text-white"></i>
+                    </div>
                 @endif
-                
-                {{-- d-flex flex-column memaksa isi card memanjang --}}
+
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $shop->name }}</h5>
                     <p class="card-text text-muted small">
@@ -69,7 +67,6 @@
                         @endif
                     </div>
                     
-                    {{-- mt-auto akan mendorong elemen ini dan tombol di bawahnya ke posisi terbawah --}}
                     <div class="mt-auto mb-3">
                         @if($shop->wifi) <i class="fas fa-wifi text-success" title="WiFi"></i> @endif
                         @if($shop->power_outlet) <i class="fas fa-plug text-success" title="Colokan Listrik"></i> @endif
@@ -77,7 +74,6 @@
                         @if($shop->suitable_for_work) <i class="fas fa-laptop text-success" title="Cocok untuk Kerja"></i> @endif
                     </div>
                     
-                    {{-- Tombol sekarang akan selalu menempel di bawah karena mt-auto di atasnya --}}
                     <a href="{{ route('coffee-shops.show', $shop->id) }}" class="btn btn-sm btn-primary w-100">
                         Lihat Detail
                     </a>

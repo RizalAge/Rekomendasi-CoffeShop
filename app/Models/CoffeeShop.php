@@ -11,6 +11,7 @@ class CoffeeShop extends Model
         'slug', 
         'description',
         'address',
+        'image',
         'latitude',
         'longitude',
         'price_range',
