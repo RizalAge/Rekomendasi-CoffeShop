@@ -8,11 +8,13 @@
                 <div class="card-body">
                     <h4 class="mb-3">Daftar Coffee Shop di Bandung</h4>
                     <form action="{{ route('coffee-shops.search') }}" method="GET" class="mb-4">
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div class="row g-3 align-items-center">
+                            
+                            <div class="col-12 col-md-4">
                                 <input type="text" name="search" class="form-control" placeholder="Cari nama atau alamat..." value="{{ request('search') }}">
                             </div>
-                            <div class="col-md-3">
+                            
+                            <div class="col-12 col-md-4">
                                 <select name="price_range" class="form-control">
                                     <option value="">Semua Harga</option>
                                     <option value="murah" {{ request('price_range') == 'murah' ? 'selected' : '' }}>Murah (< Rp25.000)</option>
@@ -20,10 +22,14 @@
                                     <option value="mahal" {{ request('price_range') == 'mahal' ? 'selected' : '' }}>Mahal (> Rp50.000)</option>
                                 </select>
                             </div>
-                            <div class="col-md-5">
-                                <button type="submit" class="btn btn-primary">Cari</button>
-                                <a href="{{ route('coffee-shops.index') }}" class="btn btn-secondary">Reset</a>
+                            
+                            <div class="col-12 col-md-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1">Cari</button>
+                                    <a href="{{ route('coffee-shops.index') }}" class="btn btn-secondary flex-grow-1 text-center">Reset</a>
+                                </div>
                             </div>
+                            
                         </div>
                     </form>
                 </div>

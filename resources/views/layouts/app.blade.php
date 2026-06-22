@@ -46,7 +46,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <i class="fas fa-mug-hot"></i> Coffee Recom Bandung
+                <i class="fas fa-mug-hot"></i> Rekomendasi Kafe Bandung
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -82,12 +82,12 @@
                                     @if($myCafe)
                                         {{-- Jika sudah punya cafe --}}
                                         <a class="dropdown-item" href="{{ route('owner.dashboard') }}">
-                                            🏪 Kelola Cafe Saya
+                                            Kelola Cafe Saya
                                         </a>
                                     @else
                                         {{-- Jika belum punya cafe (User Biasa) --}}
                                         <a class="dropdown-item" href="{{ route('owner.upload.form') }}">
-                                            🚀 Buka/Ajukan Cafe
+                                            Buka/Ajukan Cafe
                                         </a>
                                     @endif
                                     
