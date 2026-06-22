@@ -14,7 +14,6 @@
 
                     <form action="{{ route('owner.kelola.update') }}" method="POST">
                         @csrf
-                        {{-- Catatan: Rute POST update data belum dibuat, form ini adalah template UI-nya --}}
                         
                         <h5 class="mb-3">Informasi Umum</h5>
                         <div class="mb-3">
@@ -22,14 +21,25 @@
                             <textarea class="form-control" name="address" rows="2">{{ $cafe->address }}</textarea>
                         </div>
 
-                        <div class="row mb-4">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Harga Termurah (Min Price)</label>
-                                <input type="number" class="form-control" name="min_price" value="{{ $cafe->min_price }}">
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="text" class="form-control format-rupiah" id="min_price" name="min_price" 
+                                           value="{{ (!empty($cafe->min_price) && $cafe->min_price > 0) ? number_format($cafe->min_price, 0, '', '.') : '' }}" 
+                                           placeholder="0" required>
+                                </div>
                             </div>
-                            <div class="col-md-6">
+                            
+                            <div class="col-md-6 mt-3 mt-md-0">
                                 <label class="form-label">Harga Termahal (Max Price)</label>
-                                <input type="number" class="form-control" name="max_price" value="{{ $cafe->max_price }}">
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="text" class="form-control format-rupiah" id="max_price" name="max_price" 
+                                           value="{{ (!empty($cafe->max_price) && $cafe->max_price > 0) ? number_format($cafe->max_price, 0, '', '.') : '' }}" 
+                                           placeholder="0" required>
+                                </div>
                             </div>
                         </div>
 
@@ -65,12 +75,57 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        <a href="{{ route('owner.dashboard') }}" class="btn btn-secondary">Kembali</a>
+                        <div class="row g-2 mt-4">
+                            <div class="col-12 col-md-6">
+                                <button type="submit" class="btn w-100 py-2" style="background-color: #6f42c1; color: white; border-color: #6f42c1;">
+                                    Simpan Perubahan
+                                </button>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <a href="{{ route('owner.dashboard') }}" class="btn btn-secondary w-100 py-2 text-center">
+                                    Kembali
+                                </a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const rupiahInputs = document.querySelectorAll('.format-rupiah');
+    const form = document.querySelector('form');
+
+    function formatRupiah(angka) {
+        let number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa  = split[0].length % 3,
+            rupiah  = split[0].substr(0, sisa),
+            ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+        return rupiah;
+    }
+
+    rupiahInputs.forEach(function(input) {
+        input.addEventListener('keyup', function(e) {
+            this.value = formatRupiah(this.value);
+        });
+    });
+
+    if(form) {
+        form.addEventListener('submit', function() {
+            rupiahInputs.forEach(function(input) {
+                input.value = input.value.replace(/\./g, '');
+            });
+        });
+    }
+});
+</script>
 @endsection
