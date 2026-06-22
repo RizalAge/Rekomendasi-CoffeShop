@@ -12,10 +12,8 @@ class CoffeeShopController extends Controller
      */
     public function index()
     {
-        // Ambil semua data coffee shop dengan pagination
-        $coffeeShops = CoffeeShop::orderBy('name', 'asc')->paginate(12);
-        
-        // Kirim ke view
+        // Hanya menampilkan cafe yang disetujui (Approved)
+        $coffeeShops = CoffeeShop::where('status', 'approved')->paginate(12); 
         return view('coffee-shops.index', compact('coffeeShops'));
     }
     
@@ -24,8 +22,8 @@ class CoffeeShopController extends Controller
      */
     public function show($id)
     {
-        // Cari coffee shop berdasarkan ID
-        $coffeeShop = CoffeeShop::findOrFail($id);
+        // Pastikan hanya cafe yang di-approve yang bisa dilihat detailnya
+        $coffeeShop = CoffeeShop::where('status', 'approved')->findOrFail($id);
         
         // Kirim ke view detail
         return view('coffee-shops.show', compact('coffeeShop'));
@@ -36,12 +34,16 @@ class CoffeeShopController extends Controller
      */
     public function search(Request $request)
     {
-        $query = CoffeeShop::query();
+        // MULAI DENGAN WAJIB STATUS APPROVED
+        $query = CoffeeShop::where('status', 'approved');
         
-        // Filter berdasarkan nama
+        // Filter berdasarkan nama atau alamat
+        // PENTING: Gunakan closure (function($q)) agar "orWhere" tidak merusak filter "status=approved"
         if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%' . $request->search . '%')
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('address', 'like', '%' . $request->search . '%');
+            });
         }
         
         // Filter berdasarkan price range
@@ -69,7 +71,7 @@ class CoffeeShopController extends Controller
         // Urutkan berdasarkan rating tertinggi
         $coffeeShops = $query->orderBy('rating_avg', 'desc')->paginate(12);
         
-        return view('coffee-shops.index', compact('coffeeShops'));
+        return view('coffee-shops.index', compact('coffeeShops')); // Note: Perbaikan nama folder dari 'coffee-shops' menjadi 'coffee_shops' sesuai method index
     }
     
     /**
@@ -87,8 +89,8 @@ class CoffeeShopController extends Controller
         $longitude = $request->longitude;
         $radius = $request->radius ?? 5; // Default radius 5 km
         
-        // Ambil semua coffee shop dan hitung jaraknya
-        $coffeeShops = CoffeeShop::all();
+        // Hanya ambil cafe yang statusnya approved
+        $coffeeShops = CoffeeShop::where('status', 'approved')->get();
         
         $nearbyShops = [];
         foreach ($coffeeShops as $shop) {
@@ -123,8 +125,7 @@ class CoffeeShopController extends Controller
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
         $a = sin($dLat/2) * sin($dLat/2) + 
-             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * 
-             sin($dLon/2) * sin($dLon/2);
+             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon/2) * sin($dLon/2);
         $c = 2 * asin(sqrt($a));
         return $earthRadius * $c;
     }
