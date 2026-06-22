@@ -68,6 +68,18 @@
                             </div>
                         </div>
 
+                        {{-- Remember Me --}}
+                        <div class="row mb-3">
+                            <div class="col-md-6 offset-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="remember">
+                                        {{ __('Ingat Saya') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
@@ -90,11 +102,9 @@
         password.setAttribute('type', type);
         
         if (type === 'text') {
-            // Ubah ke ikon mata terbuka (bisa melihat)
             eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line x1="1" y1="1" x2="23" y2="23"/>';
             eyeIcon.style.stroke = '#0d6efd';
         } else {
-            // Ubah kembali ke ikon mata tertutup (disembunyikan)
             eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
             eyeIcon.style.stroke = 'currentColor';
         }
