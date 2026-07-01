@@ -71,7 +71,7 @@ class CoffeeShopController extends Controller
         // Urutkan berdasarkan rating tertinggi
         $coffeeShops = $query->orderBy('rating_avg', 'desc')->paginate(12);
         
-        return view('coffee-shops.index', compact('coffeeShops')); // Note: Perbaikan nama folder dari 'coffee-shops' menjadi 'coffee_shops' sesuai method index
+        return view('coffee-shops.index', compact('coffeeShops'));
     }
     
     /**
@@ -87,7 +87,7 @@ class CoffeeShopController extends Controller
         
         $latitude = $request->latitude;
         $longitude = $request->longitude;
-        $radius = $request->radius ?? 5; // Default radius 5 km
+        $radius = $request->radius ?? 5; 
         
         // Hanya ambil cafe yang statusnya approved
         $coffeeShops = CoffeeShop::where('status', 'approved')->get();
@@ -121,7 +121,7 @@ class CoffeeShopController extends Controller
      */
     private function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
-        $earthRadius = 6371; // km
+        $earthRadius = 6371; 
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
         $a = sin($dLat/2) * sin($dLat/2) + 

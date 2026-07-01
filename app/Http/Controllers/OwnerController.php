@@ -28,7 +28,7 @@ class OwnerController extends Controller
         // 1. Validasi
         $request->validate([
             'nama_cafe' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Foto utama
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
             'dokumen' => 'required|array', 
             'dokumen.*' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
@@ -49,8 +49,8 @@ class OwnerController extends Controller
         CoffeeShop::create([
             'name' => $request->nama_cafe,
             'slug' => Str::slug($request->nama_cafe), 
-            'image' => $mainImagePath, // Foto utama disimpan di sini
-            'dokumen_persyaratan' => $docPaths, // Array path dokumen disimpan di sini
+            'image' => $mainImagePath, 
+            'dokumen_persyaratan' => $docPaths,
             'user_id' => Auth::id(),
             'nama_pemilik' => $request->nama_pemilik,
             'nik_pemilik' => $request->nik_pemilik,

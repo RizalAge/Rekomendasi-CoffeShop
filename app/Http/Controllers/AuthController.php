@@ -23,9 +23,9 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $remember = $request->boolean('remember'); // ← tambahkan ini
+        $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials, $remember)) { // ← pass $remember di sini
+        if (Auth::attempt($credentials, $remember)) { 
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
@@ -56,7 +56,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user', // Default paksa jadi user
+            'role' => 'user',
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login dengan email dan password Anda.');

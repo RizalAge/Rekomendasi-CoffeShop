@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\CoffeeShop; // Pastikan model di-import
+use App\Models\CoffeeShop; 
 
 class AdminController extends Controller
 {
